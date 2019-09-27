@@ -2,8 +2,9 @@
 
 from random import randint, random
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
+from PIL import Image
+import glob
 
 class Zombie:
     """"""
@@ -30,7 +31,7 @@ class Zombie:
             self.speed = -1*self.speed
         self.x = self.x + self.speed
         self.y = self.y + self.speed
-        self.speed = 4*random()
+        #self.speed = 4*random()
 
     def infect(self):
         if not self.infected:
@@ -50,7 +51,7 @@ class World():
 
     def populate_world(self, population, initial_infection_rate, closeness):
         for person in range(population):
-            self.objectList.append(Zombie(2, initial_infection_rate, closeness))
+            self.objectList.append(Zombie(random()*4, initial_infection_rate, closeness))
 
     def update_world(self):
         for person in self.objectList:
@@ -71,9 +72,10 @@ class World():
                 healthy[i, 1] = j.y
         return infected, healthy
 
-    def plot(self, infected, healthy):
+    def plot(self, infected, healthy, no):
         plt.scatter(infected[:, 0], infected[:, 1], facecolor='red')
         plt.scatter(healthy[:, 0], healthy[:, 1], facecolor='blue')
+        plt.savefig('snapshots/{}.png'.format(no))
         plt.show()
 
 
@@ -95,8 +97,8 @@ class World():
 
 
 if __name__ == '__main__':
-    population = 50
-    initial_infection_rate = 0.15
+    population = 100
+    initial_infection_rate = 0.01
     closeness = 10
     my_world = World()
     my_world.populate_world(population, initial_infection_rate, closeness)
@@ -110,13 +112,11 @@ if __name__ == '__main__':
 
         if count % 15 == 0:
             plt.bar(['Infected', 'Not'], [int(my_world.get_number_infected()), int(my_world.get_number_well())])
-            infected, healthy = my_world.create_coord_list()
-            my_world.plot(infected, healthy)
-            plt.show()
-
 
         infected, healthy = my_world.create_coord_list()
-        my_world.plot(infected, healthy)
+        my_world.plot(infected, healthy, count)
+        plt.show()
+
 
         infectedCount.append(my_world.get_number_infected())
         healthyCount.append(my_world.get_number_well())
@@ -129,3 +129,15 @@ if __name__ == '__main__':
     print(healthyCount)
     plt.plot(range(count+1), infectedCount)
     plt.show()
+
+    frames = []
+    imgs = glob.glob("snapshots/*.png")
+    for i in imgs:
+        new_frame = Image.open(i)
+        frames.append(new_frame)
+
+    # Save into a GIF file that loops forever
+    frames[0].save('png_to_gif.gif', format='GIF',
+                   append_images=frames[1:],
+                   save_all=True,
+                   duration=300, loop=0)
