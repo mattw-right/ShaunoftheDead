@@ -30,7 +30,7 @@ class Zombie:
             self.speed = -1*self.speed
         self.x = self.x + self.speed
         self.y = self.y + self.speed
-        self.speed = 2*random()-2
+        self.speed = 2*random()-1
 
     def infect(self):
         if not self.infected:
@@ -95,9 +95,9 @@ class World():
 
 
 if __name__ == '__main__':
-    population = 100
-    initial_infection_rate = 0.1
-    closeness = 25
+    population = 50
+    initial_infection_rate = 0.15
+    closeness = 10
     my_world = World()
     my_world.populate_world(population, initial_infection_rate, closeness)
     infectedCount = []
@@ -112,6 +112,7 @@ if __name__ == '__main__':
             plt.bar(['Infected', 'Not'], [int(my_world.get_number_infected()), int(my_world.get_number_well())])
             infected, healthy = my_world.create_coord_list()
             my_world.plot(infected, healthy)
+            plt.show()
 
 
         infected, healthy = my_world.create_coord_list()
