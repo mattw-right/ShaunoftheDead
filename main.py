@@ -30,7 +30,7 @@ class Zombie:
             self.speed = -1*self.speed
         self.x = self.x + self.speed
         self.y = self.y + self.speed
-        self.speed = 2*random()-1
+        self.speed = 4*random()
 
     def infect(self):
         if not self.infected:
