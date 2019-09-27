@@ -12,8 +12,9 @@ class Zombie:
     def __init__(self, speed, infection_rate, closeness):
         """Constructor for Zombie"""
         self.speed = speed
-        self.x = randint(0, 200)
-        self.y = randint(0, 200)
+        self.dimensions = 200
+        self.x = randint(0, self.dimensions)
+        self.y = randint(0, self.dimensions)
         self.closeness = closeness
         if random() < infection_rate:
             self.infected = True
@@ -27,10 +28,10 @@ class Zombie:
             return False
 
     def move(self):
-        if self.x > 200 or self.y > 200 or self.x < 0 or self.y < 0:
+        if self.x > self.dimensions or self.y > self.dimensions or self.x < 0 or self.y < 0:
             self.speed = -1*self.speed
-        self.x = self.x + self.speed
-        self.y = self.y + self.speed
+        self.x = self.x + self.speed*random()
+        self.y = self.y + self.speed*random()
         #self.speed = 4*random()
 
     def infect(self):
@@ -51,7 +52,7 @@ class World():
 
     def populate_world(self, population, initial_infection_rate, closeness):
         for person in range(population):
-            self.objectList.append(Zombie(random()*4, initial_infection_rate, closeness))
+            self.objectList.append(Zombie(10, initial_infection_rate, closeness))
 
     def update_world(self):
         for person in self.objectList:
@@ -107,8 +108,8 @@ if __name__ == '__main__':
     count = 0
     while True:
         my_world.update_world()
-        print("{}. Number infected: {}".format(count, my_world.get_number_infected()))
-        print("{}. Number well: {}".format(count, my_world.get_number_well()))
+        #print("{}. Number infected: {}".format(count, my_world.get_number_infected()))
+        #print("{}. Number well: {}".format(count, my_world.get_number_well()))
 
         if count % 15 == 0:
             plt.bar(['Infected', 'Not'], [int(my_world.get_number_infected()), int(my_world.get_number_well())])
