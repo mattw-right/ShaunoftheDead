@@ -113,12 +113,12 @@ if __name__ == '__main__':
     count = 0
     for count in range(turns):
         my_world.update_world()
-        #print("{}. Number infected: {}".format(count, my_world.get_number_infected()))
-        #print("{}. Number well: {}".format(count, my_world.get_number_well()))
 
         if count % frequency == 0:
             #plt.bar(['Infected', 'Not'], [int(my_world.get_number_infected()), int(my_world.get_number_well())])
             print(count)
+            print("{}. Number infected: {}".format(count, my_world.get_number_infected()))
+            print("{}. Number well: {}".format(count, my_world.get_number_well()))
 
         infected, healthy = my_world.create_coord_list()
         my_world.plot(infected[2:], healthy[2:], count)
