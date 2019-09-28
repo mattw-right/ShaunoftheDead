@@ -1,12 +1,18 @@
 import glob
 import moviepy.editor as mpy
+from PIL import Image
 
-class Animate:
-        def make_movie(self):
-                gif_name = 'outputName'
-                file_list = glob.glob('snapshots/*.png') # Get all the pngs in the current directory
-                list.sort(file_list, key=lambda x: int(x.split('/')[1].split('.png')[0])) # Sort the images by #, this may need to be tweaked for your use case
-                fps = 30
-                clip = mpy.ImageSequenceClip(file_list, fps=fps)
-                clip.write_gif('{}.gif'.format(gif_name), fps=fps)
+turns = 2349
+
+frames = []
+for i in range(turns):
+        new_frame = Image.open('snapshots/{}.png'.format(i))
+        frames.append(new_frame)
+
+
+# Save into a GIF file that loops forever
+frames[0].save('output.gif', format='GIF',
+           append_images=frames[:],
+           save_all=True,
+           duration=30, loop=1)
 

@@ -11,6 +11,7 @@ closeness = 25
 dimensions = 1000
 speed = 15
 frequency = 15
+turns = 1000
 
 
 class Zombie:
@@ -111,7 +112,7 @@ if __name__ == '__main__':
     infectedCount = []
     healthyCount = []
     count = 0
-    while True:
+    for count in range(turns):
         my_world.update_world()
         #print("{}. Number infected: {}".format(count, my_world.get_number_infected()))
         #print("{}. Number well: {}".format(count, my_world.get_number_well()))
@@ -138,7 +139,7 @@ if __name__ == '__main__':
     plt.show()
 
     frames = []
-    for i in range(int(count/frequency)):
+    for i in range(turns):
         new_frame = Image.open('snapshots/{}.png'.format(i))
         frames.append(new_frame)
 
