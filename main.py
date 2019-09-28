@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-population = 100
-initial_infection_rate = 0.01
-closeness = 25
+population = 250
+initial_infection_rate = 0.005
+closeness = 50
 dimensions = 1000
-speed = 15
+speed = 10
 frequency = 15
 turns = 1000
 
@@ -37,9 +37,8 @@ class Zombie:
     def move(self):
         if self.x > dimensions or self.y > dimensions or self.x < 0 or self.y < 0:
             self.speed = -1*self.speed
-        self.x = self.x + self.speed*random()
-        self.y = self.y + self.speed*random()
-        #self.speed = 4*random()
+        self.x = self.x + self.speed*(random()-1)
+        self.y = self.y + self.speed*(random()-1)*(random()-1)
 
     def infect(self):
         if not self.infected:
@@ -122,7 +121,7 @@ if __name__ == '__main__':
             print(count)
 
         infected, healthy = my_world.create_coord_list()
-        my_world.plot(infected, healthy, count)
+        my_world.plot(infected[2:], healthy[2:], count)
         plt.show()
 
 
@@ -139,7 +138,7 @@ if __name__ == '__main__':
     plt.show()
 
     frames = []
-    for i in range(turns):
+    for i in range(count):
         new_frame = Image.open('snapshots/{}.png'.format(i))
         frames.append(new_frame)
 
