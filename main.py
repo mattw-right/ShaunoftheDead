@@ -12,6 +12,7 @@ dimensions = 1000
 speed = 10
 frequency = 15
 turns = 1000
+no_doctors = 5
 
 
 class Zombie:
@@ -48,6 +49,35 @@ class Zombie:
     def is_infected(self):
         return self.infected
 
+    def heal(self):
+        if self.infected:
+            self.infected = False
+
+
+class Doctor:
+
+    def __init__(self, speed, closeness):
+        """Constructor for Zombie"""
+        self.speed = speed
+        self.x = randint(0, dimensions)
+        self.y = randint(0, dimensions)
+        self.closeness = closeness
+
+    def touching(self, zombie):
+        if ((self.x - zombie.x) ** 2 + (self.y - zombie.y) ** 2) ** 0.5 <= self.closeness:
+            return True
+        else:
+            return False
+
+    def move(self):
+        if self.x > dimensions or self.y > dimensions or self.x < 0 or self.y < 0:
+            self.speed = -1 * self.speed
+        self.x = self.x + self.speed * (random() - 1)
+        self.y = self.y + self.speed * (random() - 1) * (random() - 1)
+
+    def infect(self):
+        if not self.infected:
+            self.infected = True
 
 
 class World():
@@ -55,10 +85,13 @@ class World():
 
     def __init__(self):
         self.objectList = []
+        self.doctorsList = []
 
     def populate_world(self, population, initial_infection_rate, closeness):
         for person in range(population):
             self.objectList.append(Zombie(speed, initial_infection_rate, closeness))
+        for doctor in range(no_doctors):
+            self.doctorsList.append(Doctor(speed, closeness))
 
     def update_world(self):
         for person in self.objectList:
@@ -66,10 +99,17 @@ class World():
             for other_zombie in self.objectList:
                 if person.is_infected and person.touching(other_zombie):
                     other_zombie.infect()
+        for doctor in self.doctorsList:
+            doctor.move()
+            for other_zombie in self.objectList:
+                if doctor.touching(other_zombie):
+                    other_zombie.heal()
+
 
     def create_coord_list(self):
         infected = np.zeros(shape=(len(self.objectList), 2))
         healthy = np.zeros(shape=(len(self.objectList), 2))
+        doctors = np.zeros(shape=(len(self.doctorsList), 2))
         for i, j in enumerate(self.objectList):
             if j.is_infected:
                 infected[i, 0] = j.x
@@ -77,12 +117,19 @@ class World():
             else:
                 healthy[i, 0] = j.x
                 healthy[i, 1] = j.y
+        for i, j in enumerate(self.doctorsList):
+            doctors[i, 0] = j.x
+            doctors[i, 1] = j.y
 
-        return infected, healthy
 
-    def plot(self, infected, healthy, no):
+
+
+        return infected, healthy, doctors
+
+    def plot(self, infected, healthy, doctors, no):
         plt.scatter(infected[:, 0], infected[:, 1], facecolor='red')
         plt.scatter(healthy[:, 0], healthy[:, 1], facecolor='blue')
+        plt.scatter(doctors[:, 0], doctors[:, 1], facecolor='green')
         plt.axis('off')
         plt.savefig('snapshots/{}.png'.format(no))
         plt.show()
@@ -105,6 +152,7 @@ class World():
         return count
 
 
+
 if __name__ == '__main__':
     my_world = World()
     my_world.populate_world(population, initial_infection_rate, closeness)
@@ -120,8 +168,8 @@ if __name__ == '__main__':
             print("{}. Number infected: {}".format(count, my_world.get_number_infected()))
             print("{}. Number well: {}".format(count, my_world.get_number_well()))
 
-        infected, healthy = my_world.create_coord_list()
-        my_world.plot(infected[2:], healthy[2:], count)
+        infected, healthy, doctors = my_world.create_coord_list()
+        my_world.plot(infected[2:], healthy[2:], doctors, count)
         plt.show()
 
 
@@ -134,7 +182,7 @@ if __name__ == '__main__':
         count+= 1
 
     print(healthyCount)
-    plt.plot(range(count+1), infectedCount)
+    plt.plot(range(count), infectedCount)
     plt.show()
 
     frames = []
