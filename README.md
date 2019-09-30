@@ -2,4 +2,4 @@
 
 Zombie simulation game using object orientation
 
-![]('output.gif')
+![Demo Output]('good_output.gif')
