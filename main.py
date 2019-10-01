@@ -4,15 +4,15 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from World import World
 
-population = 250
-initial_infection_rate = 0.005
-closeness = 50
+population = 200
+initial_infection_rate = 0.01
+closeness = 20
 dimensions = 1000
 speed = 10
 frequency = 15
 turns = 1000
 no_doctors = 5
-train_new_doctor_frequency = 75
+train_new_doctor_frequency = 100
 length_of_immunity = 10
 
 if __name__ == '__main__':

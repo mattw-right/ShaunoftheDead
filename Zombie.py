@@ -26,8 +26,9 @@ class Zombie:
     def move(self):
         if self.x > self.dimensions or self.y > self.dimensions or self.x < 0 or self.y < 0:
             self.speed = -1*self.speed
-        self.x = self.x + self.speed*(random()-1)
-        self.y = self.y + self.speed*(random()-1)*(random()-1)
+        self.small_offset = -1*random()
+        self.x = self.x + 2*(self.speed*(random()-1)+self.small_offset)
+        self.y = self.y + 2*(self.speed*(random()-1)+self.small_offset)
 
     def infect(self, count):
         if not self.infected and count-self.turn_healed > self.length_of_immunity:
